@@ -39,7 +39,7 @@ const Login = () => {
         <h2 className="text-3xl font-bold text-center text-gray-600 mb-4">Accomodation Finder</h2>
         <p className="text-gray-500 text-center mb-4">WELCOME BACK!</p>
         <p className="text-sm text-gray-400 text-center italic mb-6">
-          "Connecting people, sharing food, and making a difference, one meal at a time."
+          "Find your perfect stay—whether it's a cozy hotel or a budget-friendly PG. Your comfort, your choice!"
         </p>
 
         <form onSubmit={handleLogin} className="space-y-4">

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // Import Auth Context
 
@@ -18,12 +17,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-gray-300">
-          AccomFinder
+          ResideEase
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6">
           <Link to="/" className="hover:text-gray-400 transition">Home</Link>
+          <Link to="/profile" className="hover:text-gray-400 transition">Profile</Link> {/* Profile added next to Home */}
           <Link to="/listings" className="hover:text-gray-400 transition">Listings</Link>
           <Link to="/contact" className="hover:text-gray-400 transition">Contact</Link>
 

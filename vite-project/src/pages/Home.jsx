@@ -45,9 +45,12 @@ const Home = () => {
 
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center text-center py-16 px-6">
-        <h1 className="text-5xl font-extrabold text-gray-600 mb-4">Find Your Perfect Stay</h1>
+        <h1 className="text-5xl font-extrabold text-gray-600 mb-4">
+          Find Your Perfect Stay
+        </h1>
         <p className="text-gray-700 max-w-2xl">
-          Explore the best accommodations including PGs, flats, and hotels, all in one place.
+          Explore the best accommodations including PGs, flats, and hotels, all
+          in one place.
         </p>
       </div>
 
@@ -60,8 +63,12 @@ const Home = () => {
         />
 
         <div className="text-center mt-4">
-          <h2 className="text-3xl font-bold text-gray-900">{carouselItems[currentIndex].title}</h2>
-          <p className="text-gray-800 mt-2">{carouselItems[currentIndex].description}</p>
+          <h2 className="text-3xl font-bold text-gray-900">
+            {carouselItems[currentIndex].title}
+          </h2>
+          <p className="text-gray-800 mt-2">
+            {carouselItems[currentIndex].description}
+          </p>
         </div>
 
         {/* Navigation Buttons */}
@@ -80,29 +87,46 @@ const Home = () => {
         </button>
       </div>
 
-      {/* Explore Button */}
-      <div className="flex justify-center mt-6">
+      {/* Explore Buttons */}
+      <div className="flex justify-center gap-6 mt-6">
         <button
-          onClick={() => navigate("/explore")}
+          onClick={() => navigate("/explore-pgs")}
           className="bg-blue-300 text-gray-800 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-500 transition shadow-lg"
         >
-          Explore PGs, Flats, and Hotels
+          Explore PGs & Flats
+        </button>
+        <button
+          onClick={() => navigate("/explore-hotels")}
+          className="bg-green-300 text-gray-800 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-500 transition shadow-lg"
+        >
+          Explore Hotels
         </button>
       </div>
 
       {/* Features Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 py-12 max-w-6xl mx-auto">
         <div className="bg-white text-gray-900 p-6 rounded-lg shadow-md">
-          <h3 className="text-2xl font-semibold text-gray-900">Verified Listings</h3>
-          <p className="mt-2">All accommodations are verified for safety and security.</p>
+          <h3 className="text-2xl font-semibold text-gray-900">
+            Verified Listings
+          </h3>
+          <p className="mt-2">
+            All accommodations are verified for safety and security.
+          </p>
         </div>
         <div className="bg-white text-gray-900 p-6 rounded-lg shadow-md">
-          <h3 className="text-2xl font-semibold text-gray-900">Budget-Friendly</h3>
-          <p className="mt-2">Find options that suit your budget, from affordable PGs to luxury hotels.</p>
+          <h3 className="text-2xl font-semibold text-gray-900">
+            Budget-Friendly
+          </h3>
+          <p className="mt-2">
+            Find options that suit your budget, from affordable PGs to luxury
+            hotels.
+          </p>
         </div>
         <div className="bg-white text-gray-900 p-6 rounded-lg shadow-md">
           <h3 className="text-2xl font-semibold text-gray-900">Easy Booking</h3>
-          <p className="mt-2">Instantly book your stay with our seamless online process.</p>
+          <p className="mt-2">
+            Instantly book your stay with our seamless online process.
+          </p>
         </div>
       </div>
     </div>
