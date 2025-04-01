@@ -4,6 +4,7 @@
     const cors = require('cors');
     const AuthRouter=require('./routes/AuthRouter')
     const AccomodationRoutes= require('./routes/AccomodationRoutes')
+    const FetchRoutes=require('./routes/Fetch.js')
     dotenv.config();
     require('./Models/db');
 
@@ -16,6 +17,7 @@
 
     app.use('/auth', AuthRouter);
     app.use("/accommodations", AccomodationRoutes);
+    app.use('/fetch',FetchRoutes)
     app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     });
