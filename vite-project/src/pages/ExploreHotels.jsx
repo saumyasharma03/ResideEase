@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // Import Link for navigation
 import Navbar from "../components/Navbar";
 
 const ExploreHotels = () => {
@@ -63,7 +64,12 @@ const ExploreHotels = () => {
                 className="w-full h-48 object-cover rounded-md"
                 onError={(e) => e.target.src = "https://via.placeholder.com/300"} // Fallback image
               />
-              <h3 className="text-2xl font-semibold mt-4">{hotel.name}</h3>
+              <h3 className="text-2xl font-semibold mt-4">
+                {/* Link to Hotel Detail Page */}
+                <Link to={`/hotels/${hotel._id}`} className="text-blue-600 hover:underline">
+                  {hotel.name}
+                </Link>
+              </h3>
               <p className="text-gray-700">{hotel.location.address}, {hotel.location.city}</p>
               <p className="text-gray-800 font-bold mt-2">₹{hotel.price}/night</p>
               <p className="text-yellow-500 mt-2">⭐ {hotel.rating} / 5</p>

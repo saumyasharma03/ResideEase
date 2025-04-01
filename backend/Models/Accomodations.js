@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const accommodationSchema = new mongoose.Schema({
   name: { type: String, required: true },
   type: { type: String, enum: ["PG", "Flat", "Hotel"], required: true },
+  description: { type: String, required: true }, // Added description field
   location: {
     address: String,
     city: String,
