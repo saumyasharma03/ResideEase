@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaWifi, FaSwimmer, FaSpa, FaUtensils, FaParking, FaDumbbell } from "react-icons/fa";
 import axios from "axios";
@@ -9,6 +9,7 @@ import 'leaflet-routing-machine';
 import Navbar from "../components/Navbar";
 import Footer from '../components/Footer';
 import Carousel from "../components/Carousel";
+
 const iconMapping = {
   "Free WiFi": <FaWifi className="text-blue-500 text-2xl" />,
   "Swimming Pool": <FaSwimmer className="text-blue-500 text-2xl" />,
@@ -26,6 +27,21 @@ export default function HotelDetailPage() {
   const [map, setMap] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
   const [userAddress, setUserAddress]= useState("");
+  const navigate= useNavigate();
+  const handleBookNow = () => {
+    if (!hotel) return;
+
+    navigate("/booknow", {
+      state: {
+        hotelName: hotel.name,
+        hotelId: hotel._id,
+        location: hotel.location,
+        price: hotel.price,
+        amenities: hotel.amenities,
+        img: hotel.images
+      },
+    });
+  };
   useEffect(() => {
     axios.get(`http://localhost:5000/accommodations/hotel/${hotelId}`)
       .then(response => setHotel(response.data))
@@ -163,6 +179,12 @@ export default function HotelDetailPage() {
                 </div>
               ))}
             </div>
+            <button
+            onClick={handleBookNow}
+            className="w-full mt-6 bg-green-500 text-white p-3 rounded-md hover:bg-green-600 transition"
+          >
+            Book Now
+          </button>
           </div>
         </div>
 

@@ -10,8 +10,9 @@ import {FetchProvider} from "./context/FetchContext";
 import HotelDetailPage from "./pages/HotelDetails"
 // import { AuthProvider } from "./context/AuthContext";
 import PGDetailPage from "./pages/PGDetails";
-
-
+import Booking from "./pages/BookingConfirmed";
+import BookNow from "./pages/BookNow";
+import Xo from "./pages/Xo"
 function App() {
   return (
     <>
@@ -27,7 +28,10 @@ function App() {
           <Route path="/admin/fetchItems" element={<Fetch />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/pgs/:pgId" element={<PGDetailPage/>} />
-
+          <Route path="/booknow" element={<BookNow/>} />
+          <Route path="/booking-confirmed" element={<Booking/>} />
+          <Route path="/Xo" element={<Xo/>} />
+          
         </Routes>
      </FetchProvider>
       </>

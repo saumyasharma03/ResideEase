@@ -26,7 +26,7 @@ export default function PGDetailPage() {
   const [routingControl, setRoutingControl] = useState(null);
   const [userAddress, setUserAddress]= useState("");
   useEffect(() => {
-    axios.get(`http://localhost:5000/accommodations/pg/${pgId}`)
+    axios.get(`http://localhost:5000/accommodations/pgs/${pgId}`)
       .then(response => setPgs(response.data))
       .catch(error => console.error("Error fetching pgs details:", error));
   }, [pgId]);

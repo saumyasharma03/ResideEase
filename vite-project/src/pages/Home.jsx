@@ -5,6 +5,7 @@ import hotelsImg from "../assets/hotels.jpeg";
 import flatsImg from "../assets/hotels2.jpg";
 import pgsImg from "../assets/flats.jpg";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -129,6 +130,7 @@ const Home = () => {
           </p>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

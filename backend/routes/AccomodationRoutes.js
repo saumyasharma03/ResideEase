@@ -43,7 +43,7 @@ router.get("/pgs", async (req, res) => {
     res.status(500).json({ message: "Error fetching PGs", error: error.message });
   }
 });
-router.get("/pg/:pgId", async (req, res) => {
+router.get("/pgs/:pgId", async (req, res) => {
   try {
     const pg = await Accommodation.findById(req.params.pgId);
     if (!pg) return res.status(404).json({ message: "PG not found" });
