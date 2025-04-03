@@ -8,6 +8,7 @@ import Fetch from "./components/Fetch";
 import {FetchProvider} from "./context/FetchContext";
 import HotelDetailPage from "./pages/HotelDetails"
 // import { AuthProvider } from "./context/AuthContext";
+import PGDetailPage from "./pages/PGDetails";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/hotels/:hotelId"  element={<HotelDetailPage/>}/>
           <Route path="/admin/fetchItems" element={<Fetch />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/pgs/:pgId" element={<PGDetailPage/>} />
 
         </Routes>
      </FetchProvider>
