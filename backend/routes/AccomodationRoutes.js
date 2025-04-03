@@ -43,6 +43,16 @@ router.get("/pgs", async (req, res) => {
     res.status(500).json({ message: "Error fetching PGs", error: error.message });
   }
 });
+router.get("/pg/:pgId", async (req, res) => {
+  try {
+    const pg = await Accommodation.findById(req.params.pgId);
+    if (!pg) return res.status(404).json({ message: "PG not found" });
+    res.json(pg);
+  } catch (error) {
+    console.error("Error fetching PG details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 // Fetch all accommodations
 router.get("/all", async (req, res) => {
