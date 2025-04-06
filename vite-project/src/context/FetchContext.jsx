@@ -3,7 +3,8 @@ const FetchContext=createContext();
 
 export const FetchProvider=({children})=>{
     const [param,setParam]=useState("Hotels")
-    return <FetchContext.Provider value={{param,setParam}}>
+    const[id,setId]=useState(null)
+    return <FetchContext.Provider value={{param,setParam,id,setId}}>
         {children}
     </FetchContext.Provider>
 };

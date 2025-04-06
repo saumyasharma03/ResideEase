@@ -1,7 +1,6 @@
 const express=require('express')
 const router=express.Router()
 const Accommodation = require("../Models/Accomodations");
-
 router.get('/Hotels',async(req,res)=>{
    try {
        const hotels = await Accommodation.find({ type: "Hotel" });
