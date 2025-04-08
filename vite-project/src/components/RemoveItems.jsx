@@ -1,19 +1,25 @@
 import React from "react";
 import { FaTrash } from "react-icons/fa"; 
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const DisplayItems = (props) => {
+const RemoveItems = (props) => {
   const location=useLocation();
+  const navigate=useNavigate()
   const handleOnRemove=async(id)=>{
+    console.log("deleteing this "+id);
     try{
+        let json_id={id:id}
       const requestOptions={
         method:"DELETE",
         headers:{"Content-Type": "application/json"},
-        body:{"id":id}
+        body:JSON.stringify(json_id)
       }
-      const response=await fetch(`http://localhost:5000/remove`)
+      const response=await fetch(`http://localhost:5000/remove/items`,requestOptions)
       const data=await response.json()
       console.log(data)
+      navigate('/admin')
+      
     }
       catch(error)
       {
@@ -67,4 +73,4 @@ const DisplayItems = (props) => {
   );
 };
 
-export default DisplayItems;
+export default RemoveItems;

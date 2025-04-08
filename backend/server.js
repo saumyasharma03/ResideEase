@@ -5,6 +5,9 @@
     const AuthRouter=require('./routes/AuthRouter')
     const AccomodationRoutes= require('./routes/AccomodationRoutes')
     const FetchRoutes=require('./routes/Fetch.js')
+    const RemoveRoutes=require('./routes/Remove.js')
+    const AddRoutes=require('./routes/Add.js')
+    const UserRoutes=require('./routes/User.js')
     dotenv.config();
     require('./Models/db');
 
@@ -18,6 +21,9 @@
     app.use('/auth', AuthRouter);
     app.use("/accommodations", AccomodationRoutes);
     app.use('/fetch',FetchRoutes)
+    app.use('/remove',RemoveRoutes)
+    app.use('/add',AddRoutes)
+    app.use('/user',UserRoutes)
     app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     });
