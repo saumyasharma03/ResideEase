@@ -12,7 +12,11 @@ import HotelDetailPage from "./pages/HotelDetails"
 import PGDetailPage from "./pages/PGDetails";
 import Booking from "./pages/BookingConfirmed";
 import BookNow from "./pages/BookNow";
-import Xo from "./pages/Xo"
+import Xo from "./pages/Xo";
+import AddItem from "./components/AddItem";
+import AddUser from "./components/AddUser";
+import RemoveUser from "./components/RemoveUser.jsx"
+import FetchUsers from "./components/FetchUsers.jsx";
 function App() {
   return (
     <>
@@ -25,12 +29,20 @@ function App() {
           <Route path="/explore-hotels" element={<ExploreHotels />} />
           <Route path="/explore-pgs" element={<ExplorePG />} />
           <Route path="/hotels/:hotelId"  element={<HotelDetailPage/>}/>
-          <Route path="/admin/fetchItems" element={<Fetch />} />
-          <Route path="/admin" element={<Admin />} />
+          {/* <Route path="/admin/fetchItems" element={<Fetch />} />
+          <Route path="/admin" element={<Admin />} /> */}
           <Route path="/pgs/:pgId" element={<PGDetailPage/>} />
           <Route path="/booknow" element={<BookNow/>} />
           <Route path="/booking-confirmed" element={<Booking/>} />
           <Route path="/Xo" element={<Xo/>} />
+          <Route path="/admin/fetchItems" element={<Fetch tag={1}/>} />
+          <Route path="/admin/removeItems" element={<Fetch tag={2} />} />
+          <Route path="/admin/addItem" element={<AddItem />} />
+          <Route path="/admin/addUser" element={<AddUser />} />
+          <Route path="/admin/removeUser" element={<RemoveUser />} />
+          <Route path="/admin/fetchUsers" element={<FetchUsers />} />
+          <Route path="/admin" element={<Admin />} />
+
           
         </Routes>
      </FetchProvider>
