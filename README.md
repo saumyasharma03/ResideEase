@@ -85,7 +85,7 @@ cd vite-project
 npm run dev
 ```
 
-# Visit the app:
-# Go to http://localhost:5173 to access the platform.
+### Visit the app:
+### Go to http://localhost:5173 to access the platform.
 
 
