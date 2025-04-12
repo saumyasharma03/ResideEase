@@ -55,20 +55,18 @@
 git clone https://github.com/your-username/resideease.git
 cd resideease
 ```
-### 2. Clone the repository
+### 2. Install Dependencies
 For backend
 ```bash
 cd backend
 npm install
 ```
-### 3. Clone the repository
 For Frontend
 ```bash
 cd vite-project
 npm install
 ```
-### 4. Clone the repository
- Set up environment variables
+### 3. Set up environment variables
 Create a .env file in both server and client directories and add the necessary environment variables such as:
 
 JWT_SECRET (for authentication)
@@ -77,7 +75,7 @@ MONGODB_URI (MongoDB connection string)
 
 PORT (choose a port for your server)
 
-### 5. Run the development environment
+### 4. Run the development environment
 ```bash
 cd backend
 node server.js
