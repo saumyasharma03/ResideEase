@@ -5,21 +5,28 @@ const User=require("../Models/User");
 const fetchUser = require('../Middlewares/fetchUser');
 const cors = require('cors');
 
-router.post('/add',async(req,res)=>{
-    try{
-        const obj=req.body;
-        const userId=await User.findOne({email:obj.contactInfo.email})
-        obj.userId=userId._id
-        const booking=await Booking.create(obj)
-        res.json(booking)
-        
-    }
-    catch(error)
-    {
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
+router.post('/add', async (req, res) => {
     
-})
+    try {
+      const obj = req.body;
+      console.log(obj);
+      const user = await User.findOne({ email: obj.contactInfo.email });
+      console.log(user);
+      console.log("Received booking data:", obj);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found with this email" });
+      }
+      obj.userId = user._id;
+  
+      const booking = await Booking.create(obj);
+      res.json(booking);
+  
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+  });
+  
 router.delete('/cancel',fetchUser,async(req,res)=>{
     try{
         let id=req.body.id;
@@ -52,5 +59,22 @@ router.get('/fetchById',fetchUser,async(req,res)=>{
     {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
-})
+});
+router.get("/user/:userId", async (req, res) => {
+    try {
+      const { userId} = req.params;
+      
+      console.log("Finding bookings for userId:", userId);
+      
+      const bookings = await Booking.find({userId:userId});
+      console.log("Bookings found:", bookings);
+  
+      res.json(bookings);
+    } catch (err) {
+      console.error("Error fetching bookings:", err); 
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  
 module.exports=router

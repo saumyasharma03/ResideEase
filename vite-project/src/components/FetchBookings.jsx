@@ -1,31 +1,41 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState,useEffect } from 'react';
+import axios from "axios";
 import { useAuth } from '../context/AuthContext';
 const FetchBookings = () => {
-    const[bookings,setBookings]=useState([])
-    const {user}=useAuth()
-    
-    const fetchBookings = async () => {
-        try {
-          const requestOptions = {
-            method: "GET",
-            headers: { "Content-Type": "application/json" ,"token":user.token},
-            
-          };
-          const response = await fetch(`http://localhost:5000/booking/fetchById`, requestOptions);
-          console.log(response)
-          const data = await response.json();
-          setBookings(data);
-          console.log(data);
-        } catch (error) {
-          console.error("Error fetching bookings:", error);
-        }
-      };
-      useEffect(() => {
-        if (user && user.token) {
-          fetchBookings();
-        }
-      }, [user]);
-     
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState([]);
+  const getUserIdFromToken = (token) => {
+    try {
+      const base64Payload = token.split('.')[1];
+      const decodedPayload = atob(base64Payload);
+      const payloadObject = JSON.parse(decodedPayload);
+      return payloadObject.userId;
+    } catch (err) {
+      console.error("Failed to decode token:", err);
+      return null;
+    }
+  };
+  
+  useEffect(() => {
+    const fetchUserBookings = async () => {
+      if (!user || !user.token) return;
+  
+      const userId = getUserIdFromToken(user.token);
+      console.log(userId);
+      if (!userId) return;
+  
+      try {
+        const res = await axios.get(`http://localhost:5000/booking/user/${userId}`);
+        setBookings(res.data);
+      } catch (err) {
+        console.error("Error fetching bookings:", err.response?.data || err.message);
+      }
+    };
+  
+    fetchUserBookings();
+  }, [user]);
+  
+  
       return (
         <div className="p-8">
           <h1 className="text-2xl font-bold mb-6">Your Bookings</h1>

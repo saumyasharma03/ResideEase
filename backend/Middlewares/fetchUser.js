@@ -1,18 +1,24 @@
-var jwt=require('jsonwebtoken')
-const JWT_SECRET="secret-123"
-const fetchUser=(req,res,next)=>{
-    const authToken = req.headers['token']
-    if(!authToken)
-    {
-        return res.status(500).send({error:"Access Denied"});
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET;
+
+const fetchUser = (req, res, next) => {
+    const authHeader = req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Access Denied' });
     }
-    try {
-        const data=jwt.verify(authToken,JWT_SECRET)
-        req.userId=data.userId
-        next();
-    } catch (error) {
-        res.status(500).send({error:"Could not fetch user"});
-    }
-   
-}
-module.exports=fetchUser
+    const token = authHeader.split(' ')[1];
+    
+  if (!token) {
+    return res.status(401).json({ error: 'Access Denied' });
+  }
+
+  try {
+    const data = jwt.verify(token, JWT_SECRET);
+    req.userId = data.id;
+    next();
+  } catch (err) {
+    res.status(401).json({ error: 'Access Denied' });
+  }
+};
+
+module.exports = fetchUser;
