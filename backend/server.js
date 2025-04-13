@@ -8,6 +8,7 @@
     const RemoveRoutes=require('./routes/Remove.js')
     const AddRoutes=require('./routes/Add.js')
     const UserRoutes=require('./routes/User.js')
+    const BookingRoutes=require('./routes/BookingRoutes.js')
     dotenv.config();
     require('./Models/db');
 
@@ -24,6 +25,7 @@
     app.use('/remove',RemoveRoutes)
     app.use('/add',AddRoutes)
     app.use('/user',UserRoutes)
+    app.use('/booking',BookingRoutes)
     app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     });
