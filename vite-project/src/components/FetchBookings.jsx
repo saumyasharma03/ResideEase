@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from "axios";
 import { useAuth } from '../context/AuthContext';
+import Navbar from './Navbar';
 const FetchBookings = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
@@ -37,6 +38,8 @@ const FetchBookings = () => {
   
   
       return (
+        <>
+        <Navbar/>
         <div className="p-8">
           <h1 className="text-2xl font-bold mb-6">Your Bookings</h1>
           {bookings.length === 0 ? (
@@ -83,6 +86,7 @@ const FetchBookings = () => {
             </div>
           )}
         </div>
+        </>
       );
     };
     

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
 
 
 const BookNow = () => {
@@ -69,6 +70,8 @@ const BookNow = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-8">
       <div className="w-full max-w-5xl bg-white shadow-xl rounded-3xl p-8 flex gap-8">
         {/* Left Section */}
@@ -159,6 +162,7 @@ const BookNow = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
