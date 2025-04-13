@@ -1,69 +1,70 @@
-import React, { useState } from "react";
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken"); // Add JWT
+const User = require("../Models/User");
 
-const BookNow = () => {
-  const [formData, setFormData] = useState({
-    destination: "",
-    checkIn: "",
-    checkOut: "",
-    guests: 1,
-    rooms: 1,
-    price: "5000",
-    document: null,
-  });
+const signup = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    
+    console.log("Signup request received:", { username, email });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+   
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log("User already exists:", email);
+      return res.status(400).json({ message: "User already exists" });
+    }
 
-  const handleFileUpload = (e) => {
-    setFormData({ ...formData, document: e.target.files[0] });
-  };
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Password hashed successfully");
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="w-full max-w-2xl shadow-lg p-6 bg-white rounded-2xl">
-        <h2 className="text-xl font-bold mb-4">Book Your Stay</h2>
-        
-        <label className="block text-sm font-medium text-gray-700">Destination</label>
-        <input type="text" name="destination" value={formData.destination} onChange={handleChange} placeholder="Enter destination or property" className="w-full p-2 border rounded-md" />
-        
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Check-in Date</label>
-            <input type="date" name="checkIn" value={formData.checkIn} onChange={handleChange} className="w-full p-2 border rounded-md" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Check-out Date</label>
-            <input type="date" name="checkOut" value={formData.checkOut} onChange={handleChange} className="w-full p-2 border rounded-md" />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Guests</label>
-            <input type="number" name="guests" value={formData.guests} onChange={handleChange} min="1" className="w-full p-2 border rounded-md" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Rooms</label>
-            <input type="number" name="rooms" value={formData.rooms} onChange={handleChange} min="1" className="w-full p-2 border rounded-md" />
-          </div>
-        </div>
-        
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700">Pricing</label>
-          <p className="text-lg font-semibold">₹{formData.price}/night</p>
-        </div>
-        
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700">Upload Documents</label>
-          <input type="file" onChange={handleFileUpload} className="w-full p-2 border rounded-md" />
-        </div>
-        
-        <button className="mt-6 w-full bg-blue-500 text-white py-2 rounded-lg">Confirm Booking</button>
-      </div>
-    </div>
-  );
+    const newUser = new User({ username, email, password: hashedPassword });
+    await newUser.save();
+
+    console.log("User created successfully:", username);
+    res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    console.error("Signup error:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
-export default BookNow;
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
+   
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+  
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Create JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },  
+      process.env.JWT_SECRET,                  
+      { expiresIn: "1h" }                       
+    );
+    console.log(user)
+    res.status(200).json({
+      message: "Login successful",
+      token: token, 
+      username:user.username,
+      email:user.email,
+    });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  signup,
+  login,
+};

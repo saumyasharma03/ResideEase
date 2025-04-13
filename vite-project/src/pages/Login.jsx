@@ -19,14 +19,14 @@ const Login = () => {
       const response = await axios.post("http://localhost:5000/auth/login", { email, password }, { 
         headers: { "Content-Type": "application/json" }, 
       });
-
+      
+     //console.log(response)
       if (response.status === 200) {
         toast.success("Login successful!");
         
         // Store user info using AuthContext
-        login({ username: response.data.username, token: response.data.token });
-
-        navigate("/"); // Redirect to Home after login
+        login({ username: response.data.username, token: response.data.token,email:response.data.email});
+        response.data.username!=="admin"?navigate("/"):navigate("/admin"); // Redirect to Home after login
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed. Please try again.");

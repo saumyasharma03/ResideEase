@@ -1,36 +1,37 @@
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import {
+  LogOut,
+  CalendarCheck,
+  CalendarX,
+  User,
+} from "lucide-react";
 
 const Profile = () => {
   const { user, logout } = useAuth();
-  const [bookingHistory, setBookingHistory] = useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(`http://localhost:5000/bookings/${user._id}`)
-        .then((response) => setBookingHistory(response.data))
-        .catch((error) =>
-          console.error("Error fetching booking history:", error)
-        );
-    }
-  }, [user]);
 
   const handleLogout = () => {
     logout();
-    navigate("/login"); // Redirect to login after logout
+    navigate("/login");
+  };
+
+  const handleBookings = () => {
+    navigate("/fetchBookings");
+  };
+
+  const cancelBookings = () => {
+    navigate("/cancelBookings");
   };
 
   if (!user) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
-        <p className="text-lg">⚠ Please log in to view your profile.</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-700">
+        <p className="text-xl font-semibold">⚠ Please log in to view your profile.</p>
         <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+          className="mt-6 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
           onClick={() => navigate("/login")}
         >
           Go to Login
@@ -40,40 +41,53 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       <Navbar />
-      <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-4">👤 User Profile</h2>
-
-        {/* User Details */}
-        <div className="mb-6">
-          <p><strong>Name:</strong> {user.username}</p>
-          <p><strong>Email:</strong> {user.email}</p>
+      <div className="max-w-4xl mx-auto mt-12 bg-white p-10 rounded-2xl shadow-lg">
+        <div className="flex items-center mb-6 gap-3">
+          <User className="text-blue-600" size={32} />
+          <h2 className="text-3xl font-bold">User Profile</h2>
         </div>
 
-        {/* Booking History */}
-        <h3 className="text-2xl font-semibold mb-3">🏨 Booking History</h3>
-        {bookingHistory.length > 0 ? (
-          <ul className="border rounded-lg p-4">
-            {bookingHistory.map((booking) => (
-              <li key={booking._id} className="border-b py-2">
-                <p><strong>Hotel:</strong> {booking.hotelName}</p>
-                <p><strong>City:</strong> {booking.city}</p>
-                <p><strong>Booking Date:</strong> {new Date(booking.date).toLocaleString()}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No bookings yet.</p>
-        )}
+        <div className="mb-8 space-y-2 pl-1">
+          <p className="text-lg"><strong>Name:</strong> {user.username}</p>
+          <p className="text-lg"><strong>Email:</strong> {user.email}</p>
+        </div>
 
-        {/* Logout Button */}
-        <button
-          className="mt-6 bg-red-500 px-4 py-2 text-white rounded-lg hover:bg-red-600"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+        <div className="mt-8 border-t pt-6">
+          <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+            <CalendarCheck className="text-green-600" />
+            Booking Options
+          </h3>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              className="flex items-center gap-2 bg-blue-500 px-4 py-2 text-white rounded-lg hover:bg-blue-600 transition"
+              onClick={handleBookings}
+            >
+              <CalendarCheck size={20} />
+              View Bookings
+            </button>
+
+            <button
+              className="flex items-center gap-2 bg-yellow-500 px-4 py-2 text-white rounded-lg hover:bg-yellow-600 transition"
+              onClick={cancelBookings}
+            >
+              <CalendarX size={20} />
+              Cancel Bookings
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <button
+            className="flex items-center gap-2 bg-red-500 px-4 py-2 text-white rounded-lg hover:bg-red-600 transition"
+            onClick={handleLogout}
+          >
+            <LogOut size={20} />
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

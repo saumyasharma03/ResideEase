@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const BookNow = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const hotelDetails = location.state || {}; // Extracting passed hotel details
+  const placeDetails = location.state || {name:"MyHotel"}; // Extracting passed hotel details
 
   const [formData, setFormData] = useState({
     title: "Mr", // Default title
@@ -12,7 +12,7 @@ const BookNow = () => {
     LastName: "",
     EmailId: "",
     PhoneNumber: "",
-    destination: hotelDetails.location || "",
+    destination: placeDetails.location || "India",
     checkIn: "",
     checkOut: "",
     guests: 1,
@@ -30,7 +30,34 @@ const BookNow = () => {
     setFormData({ ...formData, document: e.target.files[0] });
   };
 
-  const handleConfirmBooking = () => {
+  const handleConfirmBooking = async(e) => {
+    e.preventDefault();
+    
+    try{
+    const obj={}
+    obj.placeName=placeDetails.name
+    obj.type=placeDetails.type||"Hotel"
+    obj.checkInDate=formData.checkIn
+    obj.checkOutDate=formData.checkOut
+    obj.numberOfGuests=formData.guests
+    obj.roomType=formData.rooms===1?"Single":formData.rooms===2 ?"Double":"Suite"
+    obj.contactInfo={name:formData.FirstName,email:formData.EmailId,phone:formData.PhoneNumber}
+    obj.totalPrice=3000
+    obj.userId=12345
+
+    const response = await fetch("http://localhost:5000/booking/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(obj)
+  });
+
+  const data = await response.json();
+  console.log(data)
+}
+  catch(error)
+  {
+    console.error("Error submitting form:", error);
+  }
     navigate("/booking-confirmed", { state: formData });
   };
 
@@ -41,10 +68,10 @@ const BookNow = () => {
         <div className="w-2/3">
           <h2 className="text-2xl font-bold mb-6">Book Your Stay</h2>
           <h3 className="text-lg font-semibold">
-            Hotel: {hotelDetails.hotelName || "Unknown"}
+            Hotel: {placeDetails.hotelName || "MyHotel"}
           </h3>
           <p className="text-gray-600">
-  Location: {hotelDetails.location?.address}, {hotelDetails.location?.city}, {hotelDetails.location?.state}
+  Location: {placeDetails.location?.address}, {placeDetails.location?.city}, {placeDetails.location?.state}
 </p>
 
 
@@ -112,23 +139,23 @@ const BookNow = () => {
 
         {/* Right Section - Price Breakdown */}
         <div className="w-1/3 bg-gray-50 p-6 rounded-2xl shadow-md">
-        <img src={Array.isArray(hotelDetails.img) ? hotelDetails.img[0] : hotelDetails.img} 
+        <img src={Array.isArray(placeDetails.img) ? placeDetails.img[0] : placeDetails.img} 
             alt="Hotel" className="w-full h-48 object-cover rounded-lg mb-6" />
 
           <h3 className="text-xl font-bold mb-4">Price Breakdown</h3>
           <p className="text-gray-600">{formData.rooms} Room x {formData.guests} Guests</p>
           <div className="flex justify-between mt-3">
             <span>Base Price</span>
-            <span className="font-semibold">₹ {hotelDetails.price || "N/A"}</span>
+            <span className="font-semibold">₹ {placeDetails.price || "N/A"}</span>
           </div>
           <div className="flex justify-between mt-3">
             <span>Hotel Taxes</span>
-            <span className="font-semibold">₹ {hotelDetails.price ? (hotelDetails.price * 0.18).toFixed(2) : "N/A"}</span>
+            <span className="font-semibold">₹ {placeDetails.price ? (placeDetails.price * 0.18).toFixed(2) : "N/A"}</span>
           </div>
           <hr className="my-3" />
           <div className="flex justify-between font-bold text-lg">
             <span>Total Amount</span>
-            <span>₹ {hotelDetails.price ? (hotelDetails.price * 1.18).toFixed(2) : "N/A"}</span>
+            <span>₹ {placeDetails.price ? (placeDetails.price * 1.18).toFixed(2) : "N/A"}</span>
           </div>
         </div>
       </div>
