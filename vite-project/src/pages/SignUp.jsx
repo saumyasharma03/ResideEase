@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
 
 const Signup = () => {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -18,22 +20,32 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Send the POST request to register the user
       await axios.post("http://localhost:5000/auth/register", formData, {
         headers: { "Content-Type": "application/json" },
       });
-      toast.success("Signup successful!");
+
+      // Success toast notification
+      toast.success("Account created successfully!");
+
+      // Redirect to Home after a short delay
+      setTimeout(() => {
+        navigate("/login"); // Navigate to the login page
+      }, 1500);
+
     } catch (err) {
+      // Error toast notification
       toast.error(err.response?.data?.message || "Signup failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-96 border border-gray-300">
-        <h2 className="text-3xl font-bold text-center text-gray-600 mb-4">Accomodation Finder</h2>
-        <p className="text-gray-800 text-center text-sm mb-6">Join us and start your journey!</p>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300">
+      <div className="bg-white shadow-xl rounded-lg p-8 w-96 border border-gray-200">
+        <h2 className="text-3xl font-bold text-center text-gray-700 mb-4">Accommodation Finder</h2>
+        <p className="text-gray-600 text-center text-sm mb-6">Join us and start your journey!</p>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <input
               type="text"
@@ -42,7 +54,7 @@ const Signup = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-blue-900 rounded-lg bg-blue-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -54,7 +66,7 @@ const Signup = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-blue-900 rounded-lg bg-blue-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -66,7 +78,7 @@ const Signup = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-blue-900 rounded-lg bg-blue-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -78,8 +90,11 @@ const Signup = () => {
           </button>
         </form>
 
-        <p className="text-center text-gray-900 text-sm mt-4">
-          Already have an account? <a href="/login" className="text-blue-400 hover:underline">Login</a>
+        <p className="text-center text-gray-700 text-sm mt-4">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-500 hover:underline">
+            Login
+          </a>
         </p>
       </div>
     </div>

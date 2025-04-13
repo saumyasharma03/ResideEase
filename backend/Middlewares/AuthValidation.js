@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 // Signup Validation Middleware
 const signupValidation = (req, res, next) => {
-  
+  console.log("hie");
   const schema = Joi.object({
     username: Joi.string().min(3).required(),
     email: Joi.string().email().required(),
