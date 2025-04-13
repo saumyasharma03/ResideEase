@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaWifi, FaSwimmer, FaSpa, FaUtensils, FaParking, FaDumbbell } from "react-icons/fa";
 import axios from "axios";
@@ -9,6 +9,7 @@ import 'leaflet-routing-machine';
 import Navbar from "../components/Navbar";
 import Footer from '../components/Footer';
 import Carousel from "../components/Carousel";
+
 const iconMapping = {
   "Free WiFi": <FaWifi className="text-blue-500 text-2xl" />,
   "Swimming Pool": <FaSwimmer className="text-blue-500 text-2xl" />,
@@ -17,19 +18,38 @@ const iconMapping = {
   "Parking": <FaParking className="text-blue-500 text-2xl" />,
   "Fitness Center": <FaDumbbell className="text-blue-500 text-2xl" />
 };
+
 export default function PGDetailPage() {
   const { pgId } = useParams();
+  const navigate = useNavigate();
   const [pg, setPgs] = useState(null);
   const [userLocation, setUserLocation] = useState("");
   const [routeInfo, setRouteInfo] = useState(null);
   const [map, setMap] = useState(null);
   const [routingControl, setRoutingControl] = useState(null);
-  const [userAddress, setUserAddress]= useState("");
+  const [userAddress, setUserAddress] = useState("");
+
   useEffect(() => {
     axios.get(`http://localhost:5000/accommodations/pgs/${pgId}`)
       .then(response => setPgs(response.data))
       .catch(error => console.error("Error fetching pgs details:", error));
   }, [pgId]);
+
+  const handleBookNow = () => {
+    if (!pg) return;
+    navigate("/pgnow", {
+      state: {
+        pgName: pg.name,
+        pgId: pg._id,
+        location: pg.location,
+        price: pg.price,
+        rentRange: pg.rentRange || "5000 - 8000",
+        amenities: pg.amenities,
+        img: pg.images
+      }
+    });
+  };
+
   const getUserLocation = async () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
@@ -40,15 +60,15 @@ export default function PGDetailPage() {
       const { latitude, longitude } = position.coords;
       setUserLocation({ lat: latitude, lon: longitude });
 
-      // Reverse geocoding to get the address
       const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
       setUserAddress(res.data.display_name);
     }, () => {
       alert("Unable to retrieve your location");
     });
   };
+
   const calculateRoute = async () => {
-    if (!pg || !pgId.location || !userLocation) return;
+    if (!pg || !pg.location || !userLocation) return;
 
     const { latitude: pgLat, longitude: pgLon } = pg.location;
     const { lat, lon } = userLocation;
@@ -72,19 +92,18 @@ export default function PGDetailPage() {
       });
     });
   };
+
   useEffect(() => {
     if (pg && pg.location) {
-      const { latitude, longitude } =pg.location;
+      const { latitude, longitude } = pg.location;
 
-      // Initialize map
       const mapInstance = L.map('map').setView([latitude, longitude], 13);
       setMap(mapInstance);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; OpenStreetMap contributors'
       }).addTo(mapInstance);
 
-     
       L.marker([latitude, longitude]).addTo(mapInstance)
         .bindPopup(`<b>${pg.name}</b><br>${pg.location.address}`)
         .openPopup();
@@ -93,14 +112,12 @@ export default function PGDetailPage() {
 
   const handleLocationSubmit = async () => {
     if (!pg || !pg.location) return;
-    
+
     let lat, lon;
 
     if (userLocation.includes(",")) {
-      // User entered latitude and longitude
       [lat, lon] = userLocation.split(",").map(coord => parseFloat(coord.trim()));
     } else {
-      // User entered a place name -> Fetch coordinates
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${userLocation}`);
       const data = await res.json();
       if (data.length > 0) {
@@ -111,7 +128,7 @@ export default function PGDetailPage() {
         return;
       }
     }
-    
+
     const { latitude: pgLat, longitude: pgLon } = pg.location;
 
     if (routingControl) {
@@ -119,10 +136,7 @@ export default function PGDetailPage() {
     }
 
     const control = L.Routing.control({
-      waypoints: [
-        L.latLng(lat, lon),
-        L.latLng(pgLat, pgLon)
-      ],
+      waypoints: [L.latLng(lat, lon), L.latLng(pgLat, pgLon)],
       routeWhileDragging: true
     }).addTo(map);
 
@@ -130,9 +144,10 @@ export default function PGDetailPage() {
 
     control.on('routesfound', function (e) {
       const route = e.routes[0];
-      const distance = (route.summary.totalDistance / 1000).toFixed(2);
-      const time = (route.summary.totalTime / 60).toFixed(0);
-      setRouteInfo({ distance, time });
+      setRouteInfo({
+        distance: (route.summary.totalDistance / 1000).toFixed(2),
+        time: (route.summary.totalTime / 60).toFixed(0)
+      });
     });
   };
 
@@ -142,7 +157,6 @@ export default function PGDetailPage() {
     <>
       <Navbar />
       <div className="w-full mx-auto p-6 flex flex-wrap gap-6">
-       
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-center mb-6">{pg.name}</h1>
 
@@ -161,19 +175,21 @@ export default function PGDetailPage() {
                 </div>
               ))}
             </div>
+            <button
+              onClick={handleBookNow}
+              className="w-full mt-6 bg-green-500 text-white p-3 rounded-md hover:bg-green-600 transition"
+            >
+              Book Now
+            </button>
           </div>
         </div>
 
-        {/* Right Side: Map & Distance Box */}
         <div className="w-full lg:w-1/3">
           <div id="map" style={{ height: '400px', width: '100%' }}></div>
-          
 
-            {userAddress && (
-              <p className="text-gray-700 font-medium text-center">{userAddress}</p>
-            )}
-            
-            <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
+          {userAddress && <p className="text-gray-700 font-medium text-center">{userAddress}</p>}
+
+          <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-2">Enter Your Location</h2>
             <button
               onClick={getUserLocation}
@@ -181,8 +197,8 @@ export default function PGDetailPage() {
             >
               Detect My Location
             </button>
-            <button 
-              onClick={calculateRoute} 
+            <button
+              onClick={calculateRoute}
               className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
             >
               Calculate Distance
@@ -195,17 +211,18 @@ export default function PGDetailPage() {
               </div>
             )}
           </div>
+
           <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-2">Enter Your Location</h2>
             <input
               type="text"
               placeholder="Enter lat,lon or place name"
-              value={userLocation}
+              value={typeof userLocation === 'string' ? userLocation : ''}
               onChange={(e) => setUserLocation(e.target.value)}
               className="w-full p-2 border rounded-md mb-3"
             />
-            <button 
-              onClick={handleLocationSubmit} 
+            <button
+              onClick={handleLocationSubmit}
               className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition"
             >
               Calculate Distance
