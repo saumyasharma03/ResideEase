@@ -42,7 +42,7 @@ const Signup = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300">
       <div className="bg-white shadow-xl rounded-lg p-8 w-96 border border-gray-200">
-        <h2 className="text-3xl font-bold text-center text-gray-700 mb-4">Accommodation Finder</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-700 mb-4">Welcome to ResideEase!</h2>
         <p className="text-gray-600 text-center text-sm mb-6">Join us and start your journey!</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
